@@ -1,6 +1,6 @@
 'use strict'
 
-const { NativeModules } = require('react-native');
+const { Platform, NativeModules, DeviceEventEmitter } = require('react-native');
 const { ImagePickerManager } = NativeModules;
 
 const DEFAULT_OPTIONS = {
@@ -25,6 +25,11 @@ module.exports = {
       callback = options;
       options = {};
     }
+    DeviceEventEmitter.addListener('willStartTranscoding', () => {
+        if (callback) {
+            callback({ willStartTranscoding: true });
+        }
+    });
     return ImagePickerManager.showImagePicker({...DEFAULT_OPTIONS, ...options}, callback)
   }
 }
